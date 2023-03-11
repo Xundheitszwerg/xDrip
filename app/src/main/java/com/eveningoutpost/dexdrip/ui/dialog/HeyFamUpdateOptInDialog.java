@@ -21,6 +21,7 @@ public class HeyFamUpdateOptInDialog {
     private static final boolean DEBUG = false;
 
     public static void heyFam(final Activity activity) {
+        if (true) return;
         if (DEBUG || (!Pref.getBooleanDefaultFalse(AUTO_UPDATE_PREFS_NAME)
                 && Experience.ageOfThisBuildAtLeast(Constants.DAY_IN_MS * 60)
                 && Experience.installedForAtLeast(Constants.DAY_IN_MS * 30)
