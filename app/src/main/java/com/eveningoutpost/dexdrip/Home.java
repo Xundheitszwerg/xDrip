@@ -3189,8 +3189,8 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         menu.findItem(R.id.showmap).setVisible(parakeet_menu_items);
         menu.findItem(R.id.parakeetsetup).setVisible(parakeet_menu_items);
 
-        boolean got_data = Experience.gotData();
-        menu.findItem(R.id.crowdtranslate).setVisible(got_data);
+        //boolean got_data = Experience.gotData();
+        //menu.findItem(R.id.crowdtranslate).setVisible(got_data);
 
         menu.findItem(R.id.showreminders).setVisible(Pref.getBoolean("plus_show_reminders", true) && !is_newbie);
 

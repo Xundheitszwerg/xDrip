@@ -124,7 +124,7 @@
         android:checkable="false"
         android:orderInCategory="1"
         android:onClick="crowdTranslate"
-        android:visible="true"
+        android:visible="false"
         android:showAsAction="never"/>
 
     <item android:id="@+id/userEvents"
@@ -166,6 +166,7 @@
         android:visible="false"
         android:showAsAction="never"/>
 
+    <!--
     <item android:id="@+id/checkforupdate"
         android:title="@string/check_for_updated_version"
         android:checkable="false"
@@ -179,6 +180,7 @@
         android:orderInCategory="1"
         android:onClick="sendFeedback"
         android:showAsAction="never"/>
+        -->
 
     <item android:id="@+id/action_toggle_speakreadings"
         android:title="@string/speak_readings"
