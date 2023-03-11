@@ -485,7 +485,10 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
         super.onResume();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(ActivityRecognizedService.prefListener);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && DexCollectionType.hasBluetooth() && !WholeHouse.isRpi()) {
-            LocationHelper.requestLocationForBluetooth(this); // double check!
+            if (!LocationHelper.isLocationPermissionOk(this)) {
+                Toast.makeText(this, R.string.location_permission_needed_to_use_bluetooth, Toast.LENGTH_SHORT).show();
+            }
+            //LocationHelper.requestLocationForBluetooth(this); // double check!
         }
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(LeFunEntry.prefListener);
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(Cpref.prefListener);
