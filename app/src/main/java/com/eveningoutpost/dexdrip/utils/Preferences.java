@@ -589,6 +589,7 @@ public class Preferences extends BasePreferenceActivity implements SearchPrefere
     }
 
     private static void refreshProfileRatios() {
+        if (profile_carb_ratio_default == null) return;
         profile_carb_ratio_default.setTitle(format_carb_ratio(profile_carb_ratio_default.getTitle().toString(), ProfileEditor.minMaxCarbs(ProfileEditor.loadData(false))));
         profile_insulin_sensitivity_default.setTitle(format_insulin_sensitivity(profile_insulin_sensitivity_default.getTitle().toString(), ProfileEditor.minMaxSens(ProfileEditor.loadData(false))));
     }

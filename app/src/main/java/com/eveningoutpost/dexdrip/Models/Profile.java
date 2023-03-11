@@ -86,6 +86,14 @@ public class Profile {
         //return the_carb_ratio; // g per unit
     }
 
+    public static double getUnitPer10CarbRatio(long when) {
+        double carbRatio = getCarbRatio(when);
+        if (carbRatio == 0f) {
+            return 0f;
+        }
+        return 10d/carbRatio;
+    }
+
 
     private static void populateProfile() {
         if (profileItemList == null) {

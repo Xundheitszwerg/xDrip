@@ -80,10 +80,13 @@ import com.eveningoutpost.dexdrip.Models.InsulinInjection;
 import com.eveningoutpost.dexdrip.Models.JoH;
 import com.eveningoutpost.dexdrip.Models.LibreBlock;
 import com.eveningoutpost.dexdrip.Models.ProcessInitialDataQuality;
+import com.eveningoutpost.dexdrip.Models.Profile;
 import com.eveningoutpost.dexdrip.Models.Sensor;
 import com.eveningoutpost.dexdrip.Models.StepCounter;
 import com.eveningoutpost.dexdrip.Models.Treatments;
 import com.eveningoutpost.dexdrip.Models.UserError;
+import com.eveningoutpost.dexdrip.profileeditor.ProfileEditor;
+import com.eveningoutpost.dexdrip.profileeditor.ProfileItem;
 import com.eveningoutpost.dexdrip.services.ActivityRecognizedService;
 import com.eveningoutpost.dexdrip.services.DexCollectionService;
 import com.eveningoutpost.dexdrip.services.Ob1G5CollectionService;
@@ -616,6 +619,15 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
 
         currentBgValueText.setText(""); // clear any design prototyping default
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (super.onPrepareOptionsMenu(menu)) {
+            menu.findItem(R.id.profile_current_factor).setTitle(String.format("%.1f", Profile.getUnitPer10CarbRatio(System.currentTimeMillis())));
+            return true;
+        }
+        return false;
     }
 
     private boolean firstRunDialogs(final boolean checkedeula) {
@@ -3407,6 +3419,11 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
 
     public void showMapFromMenu(MenuItem myitem) {
         startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+    }
+
+    public void profileCurrentFactor(MenuItem myitem) {
+        startActivity(new Intent(getApplicationContext(), ProfileEditor.class));
+        invalidateMenu = true;
     }
 
     public void showHelpFromMenu(MenuItem myitem) {
