@@ -1591,6 +1591,11 @@ public class BgGraphBuilder {
                                 mylabel = mylabel + System.getProperty("line.separator");
                             mylabel = mylabel + (JoH.qs(treatment.carbs, 1) + "g").replace(".0g", "g");
                         }
+                        if (treatment.noteHasContent()) {
+                            if (mylabel.length() > 0)
+                                mylabel = mylabel + System.getProperty("line.separator");
+                            mylabel = mylabel + treatment.notes;
+                        }
                         pv.setLabel(mylabel); // standard label
 
                         // show basal dose as blue syringe icon
