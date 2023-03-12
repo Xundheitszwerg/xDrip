@@ -3427,6 +3427,10 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         invalidateMenu = true;
     }
 
+    public void showBGHistory(MenuItem myitem) {
+        startActivity(new Intent(getApplicationContext(), BGHistory.class));
+    }
+
     public void showHelpFromMenu(MenuItem myitem) {
         startActivity(new Intent(getApplicationContext(), HelpActivity.class));
     }

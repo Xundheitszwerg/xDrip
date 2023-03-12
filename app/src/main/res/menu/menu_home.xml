@@ -7,6 +7,13 @@
         android:onClick="profileCurrentFactor"
         app:showAsAction="always" />
 
+    <item android:id="@+id/show_bg_history"
+        android:title="@string/history"
+        android:orderInCategory="1"
+        android:onClick="showBGHistory"
+        android:icon="@drawable/ic_history"
+        app:showAsAction="always" />
+
     <item android:id="@+id/showhelp"
         android:title="@string/show_help"
         android:checkable="false"
