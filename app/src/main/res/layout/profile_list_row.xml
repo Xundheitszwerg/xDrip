@@ -142,4 +142,50 @@
         android:textStyle="bold" />
 
 
+    <TextView
+        android:id="@+id/unit_per_10carbs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/sensitivitySeekBar"
+        android:layout_below="@+id/sensitivitySeekBar"
+        android:clickable="true"
+        android:text="@string/units_per_10carbs" />
+
+    <Button
+        android:id="@+id/up10c_button_minus"
+        android:text="-"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/unit_per_10carbs"
+        android:layout_alignStart="@id/unit_per_10carbs"
+        android:layout_marginBottom="6dp"
+        android:paddingBottom="5dp"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="5dp" />
+
+    <Button
+        android:id="@+id/up10c_button_plus"
+        android:text="+"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/unit_per_10carbs"
+        android:layout_marginBottom="6dp"
+        android:layout_toEndOf="@+id/up10c_button_minus"
+        android:paddingBottom="5dp"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="5dp" />
+
+
+    <TextView
+        android:id="@+id/upc10_text"
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/unit_per_10carbs"
+        android:layout_alignTop="@+id/up10c_button_plus"
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:singleLine="true"
+        android:text="123"
+        android:textColor="@color/year"
+        android:textSize="14sp" />
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.eveningoutpost.dexdrip.profileeditor;
 
 import android.app.Activity;
 import android.content.Context;
+import android.databinding.generated.callback.OnClickListener;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -10,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.eveningoutpost.dexdrip.Models.JoH;
+import com.eveningoutpost.dexdrip.Models.Profile;
 import com.eveningoutpost.dexdrip.R;
 
 import java.util.List;
@@ -85,7 +88,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.MyViewHo
         TextView startTime, endTime;
         RelativeLayout wholeBlock;
         int value;
-        TextView result, carbsresult, sensresult;
+        TextView result, carbsresult, sensresult, up10cresult;
+        Button up10cMinus, up10cPlus;
         int sensitivity_scaling = 1;
         int carbs_scaling = 1;
         int position = -1;
@@ -100,6 +104,10 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.MyViewHo
 
             carbsresult = (EditText) view.findViewById(R.id.profileCarbsText);
             sensresult = (EditText) view.findViewById(R.id.profileSensText);
+
+            up10cresult = (TextView) view.findViewById(R.id.upc10_text);
+            up10cMinus = (Button) view.findViewById(R.id.up10c_button_minus);
+            up10cPlus = (Button) view.findViewById(R.id.up10c_button_plus);
 
             startTime = (TextView) view.findViewById(R.id.profileTextClockStart);
             endTime = (TextView) view.findViewById(R.id.profileTextClockEnd);
@@ -164,6 +172,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.MyViewHo
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 holder.carbsresult.setText(JoH.qs(((double) progress) / holder.carbs_scaling, 1));
+                holder.up10cresult.setText(String.format("%.1f", Profile.calculateUnitPer10CarbRatio((double) progress / holder.carbs_scaling)));
             }
 
             @Override
@@ -217,6 +226,31 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.MyViewHo
             }
         });
 
+        // Minus of up10c increases the carbs slider
+        holder.up10cMinus.setOnClickListener(v -> {
+            double up10c = Math.max(0.1, JoH.tolerantParseDouble(holder.up10cresult.getText().toString()) - 0.1);
+            double value = Profile.calculateCarbRatioFromUnitPer10Carb(up10c);
+
+            if (value < 0) value = 0;
+            profileList.get(holder.position).carb_ratio = value;
+
+            holder.up10cresult.setText(String.format("%.1f", up10c));
+
+            ProfileAdapter.this.notifyItemChanged(holder.position, "carbs seek payload " + value);
+        });
+
+        // Plus of up10c decreases the carbs slider
+        holder.up10cPlus.setOnClickListener(v -> {
+            double up10c = Math.max(0.1, JoH.tolerantParseDouble(holder.up10cresult.getText().toString()) + 0.1);
+            double value = Profile.calculateCarbRatioFromUnitPer10Carb(up10c);
+
+            if (value < 0) value = 0;
+            profileList.get(holder.position).carb_ratio = value;
+
+            holder.up10cresult.setText(String.format("%.1f", up10c));
+
+            ProfileAdapter.this.notifyItemChanged(holder.position, "carbs seek payload " + value);
+        });
 
         return holder;
     }

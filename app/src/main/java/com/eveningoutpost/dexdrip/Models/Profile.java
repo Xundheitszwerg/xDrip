@@ -87,11 +87,18 @@ public class Profile {
     }
 
     public static double getUnitPer10CarbRatio(long when) {
-        double carbRatio = getCarbRatio(when);
+        return calculateUnitPer10CarbRatio(getCarbRatio(when));
+    }
+
+    public static double calculateUnitPer10CarbRatio(double carbRatio) {
         if (carbRatio == 0f) {
             return 0f;
         }
-        return 10d/carbRatio;
+        return 10d / carbRatio;
+    }
+
+    public static double calculateCarbRatioFromUnitPer10Carb(double value) {
+        return calculateUnitPer10CarbRatio(value);
     }
 
 
