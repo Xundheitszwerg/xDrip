@@ -3422,7 +3422,9 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
     }
 
     public void profileCurrentFactor(MenuItem myitem) {
-        startActivity(new Intent(getApplicationContext(), ProfileEditor.class));
+        Intent intent = new Intent(getApplicationContext(), ProfileEditor.class);
+        intent.putExtra("refresh_settings", false);
+        startActivity(intent);
         invalidateMenu = true;
     }
 

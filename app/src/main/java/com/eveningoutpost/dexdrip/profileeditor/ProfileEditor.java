@@ -274,10 +274,12 @@ public class ProfileEditor extends BaseAppCompatActivity {
 
         if (dataChanged) {
             Profile.reloadPreferences();
-            Intent intent = new Intent(ProfileEditor.this, Preferences.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            intent.putExtra("refresh", "");
-            startActivity(intent);
+            if (getIntent().getBooleanExtra("refresh_settings", true)) {
+                Intent intent = new Intent(ProfileEditor.this, Preferences.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("refresh", "");
+                startActivity(intent);
+            }
         }
     }
 
