@@ -3545,16 +3545,8 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
                 final AlertDialog alert = builder.create();
                 alert.show();
             });
-            dialog = dialogBuilder.create();
-        } else {
-            dialogBuilder.setNeutralButton("tr", null);
-            dialog = dialogBuilder.create();
-            dialog.setOnShowListener(d -> {
-                Button b = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-                b.setOnClickListener(view -> edt.append("tr"));
-            });
         }
-        //dialog = dialogBuilder.create();
+        dialog = dialogBuilder.create();
         edt.setInputType(InputType.TYPE_CLASS_TEXT);
         edt.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus && dialog != null)
