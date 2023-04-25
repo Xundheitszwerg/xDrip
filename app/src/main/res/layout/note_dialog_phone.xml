@@ -15,6 +15,15 @@
         android:minLines="2"
         android:maxLines="5" />
 
+    <EditText
+        android:id="@+id/treatment_note_tr_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:linksClickable="false"
+        android:hint="tr"
+        android:lines="1" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

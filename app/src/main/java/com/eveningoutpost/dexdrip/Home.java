@@ -3502,6 +3502,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         dialogBuilder.setView(dialogView);
 
         final EditText edt = (EditText) dialogView.findViewById(R.id.treatment_note_edit_text);
+        final EditText trEdt = (EditText) dialogView.findViewById(R.id.treatment_note_tr_edit_text);
         final CheckBox cbx = (CheckBox) dialogView.findViewById(R.id.default_to_voice_input);
         cbx.setChecked(Pref.getBooleanDefaultFalse("default_to_voice_notes"));
 
@@ -3509,6 +3510,15 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         //dialogBuilder.setMessage("Enter text below");
         dialogBuilder.setPositiveButton(R.string.done, (dialog, whichButton) -> {
             String treatment_text = edt.getText().toString().trim();
+            String trText = trEdt.getText().toString().trim();
+            if (!trText.isEmpty()) {
+                trText += "tr";
+                if (treatment_text.isEmpty()) {
+                    treatment_text = trText;
+                } else {
+                    treatment_text = trText + " | " +  treatment_text;
+                }
+            }
             Log.d(TAG, "Got treatment note: " + treatment_text);
             Treatments.create_note(treatment_text, timestamp, position); // timestamp?
             Home.staticRefreshBGCharts();
