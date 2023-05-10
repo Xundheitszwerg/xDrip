@@ -2,15 +2,15 @@ package com.eveningoutpost.dexdrip.utils.framework;
 
 import android.os.Build;
 
-import com.eveningoutpost.dexdrip.Models.JoH;
-import com.eveningoutpost.dexdrip.Models.UserError;
-import com.eveningoutpost.dexdrip.UtilityModels.PersistentStore;
+import com.eveningoutpost.dexdrip.models.JoH;
+import com.eveningoutpost.dexdrip.models.UserError;
+import com.eveningoutpost.dexdrip.utilitymodels.PersistentStore;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import static com.eveningoutpost.dexdrip.Models.JoH.buggy_samsung;
-import static com.eveningoutpost.dexdrip.Models.JoH.msSince;
+import static com.eveningoutpost.dexdrip.models.JoH.buggy_samsung;
+import static com.eveningoutpost.dexdrip.models.JoH.msSince;
 
 /**
  * jamorham
@@ -67,7 +67,9 @@ public class BuggySamsung {
     }
 
     public static boolean isSamsung() {
-        return Build.MANUFACTURER.toLowerCase().contains("samsung");
+        return Build.MANUFACTURER.toLowerCase().contains("samsung")
+                || Build.MANUFACTURER.toLowerCase().contains("xiaomi")
+                || Build.MANUFACTURER.toLowerCase().contains("oneplus");    // experimental test
     }
 
 }
