@@ -18,7 +18,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.eveningoutpost.dexdrip.models.JoH;
-import com.eveningoutpost.dexdrip.Models.Profile;
+import com.eveningoutpost.dexdrip.models.Profile;
 import com.eveningoutpost.dexdrip.R;
 
 import java.util.List;

@@ -4,6 +4,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static com.eveningoutpost.dexdrip.models.JoH.msSince;
 import static com.eveningoutpost.dexdrip.models.JoH.quietratelimit;
 import static com.eveningoutpost.dexdrip.models.JoH.tsl;
+import static com.eveningoutpost.dexdrip.services.Ob1G5CollectionService.getTransmitterID;
 import static com.eveningoutpost.dexdrip.utilitymodels.ColorCache.X;
 import static com.eveningoutpost.dexdrip.utilitymodels.ColorCache.getCol;
 import static com.eveningoutpost.dexdrip.utilitymodels.Constants.DAY_IN_MS;
@@ -67,6 +68,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.eveningoutpost.dexdrip.g5model.DexTimeKeeper;
 import com.eveningoutpost.dexdrip.g5model.Ob1G5StateMachine;
 import com.eveningoutpost.dexdrip.g5model.SensorDays;
 import com.eveningoutpost.dexdrip.importedlibraries.usbserial.util.HexDump;
@@ -80,10 +82,12 @@ import com.eveningoutpost.dexdrip.models.InsulinInjection;
 import com.eveningoutpost.dexdrip.models.JoH;
 import com.eveningoutpost.dexdrip.models.LibreBlock;
 import com.eveningoutpost.dexdrip.models.ProcessInitialDataQuality;
+import com.eveningoutpost.dexdrip.models.Profile;
 import com.eveningoutpost.dexdrip.models.Sensor;
 import com.eveningoutpost.dexdrip.models.StepCounter;
 import com.eveningoutpost.dexdrip.models.Treatments;
 import com.eveningoutpost.dexdrip.models.UserError;
+import com.eveningoutpost.dexdrip.profileeditor.ProfileEditor;
 import com.eveningoutpost.dexdrip.services.ActivityRecognizedService;
 import com.eveningoutpost.dexdrip.services.DexCollectionService;
 import com.eveningoutpost.dexdrip.services.Ob1G5CollectionService;
@@ -157,6 +161,7 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.bind.DateTypeAdapter;
+import static com.eveningoutpost.dexdrip.utils.DexCollectionType.DexcomG5;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -1132,7 +1137,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
     }
 
     public void crowdTranslate(MenuItem x) {
-       // startActivity(new Intent(this, LanguageEditor.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        // startActivity(new Intent(this, LanguageEditor.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://crowdin.com/project/xdrip")).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
@@ -2183,7 +2188,7 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         if (!has_libreblock_set) setHasLibreblock();
         return has_libreblock;
     }
-    
+
     public static boolean get_is_libre_whole_house_collector() {
         return Pref.getBooleanDefaultFalse("libre_whole_house_collector");
     }
@@ -2311,10 +2316,10 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         holdViewport.top = maxViewPort.top;
         holdViewport.bottom = maxViewPort.bottom;
 
-    if (d) {
-        UserError.Log.d(TAG, "HOLD VIEWPORT " + holdViewport);
-        UserError.Log.d(TAG, "MAX VIEWPORT " + maxViewPort);
-    }
+        if (d) {
+            UserError.Log.d(TAG, "HOLD VIEWPORT " + holdViewport);
+            UserError.Log.d(TAG, "MAX VIEWPORT " + maxViewPort);
+        }
 
         chart.setCurrentViewport(holdViewport);
 
@@ -2395,8 +2400,8 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
         if (reset_viewport) {
             reset_viewport = false;
-          //  holdViewport.set(0, 0, 0, 0);
-           // if (chart != null) chart.setZoomType(ZoomType.HORIZONTAL);
+            //  holdViewport.set(0, 0, 0, 0);
+            // if (chart != null) chart.setZoomType(ZoomType.HORIZONTAL);
             // TODO above reset viewport thing seems defunct now
         }
         setupCharts(source);
@@ -2623,7 +2628,13 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
         }
 
         if (!isSensorActive) {
-            notificationText.setText(R.string.now_start_your_sensor);
+            // Define a variable (notConnectedToG6Yet) that is only true if Native G6 is chosen, but, transmitter days is unknown.
+            boolean notConnectedToG6Yet = DexCollectionType.getDexCollectionType() == DexcomG5 && Pref.getBooleanDefaultFalse("ob1_g5_use_transmitter_alg") && Pref.getBooleanDefaultFalse("using_g6") && DexTimeKeeper.getTransmitterAgeInDays(getTransmitterID()) == -1;
+            if (notConnectedToG6Yet) { // Only if G6 has been selected and transmitter days is unknown.
+                notificationText.setText(R.string.wait_to_connect);
+            } else { // Only if G6 is not selected or G6 transmitter days is known.
+                notificationText.setText(R.string.now_start_your_sensor);
+            }
 
             if ((dialog == null) || (!dialog.isShowing())) {
                 if (!Experience.gotData() && Experience.backupAvailable() && JoH.ratelimit("restore-backup-prompt", 10)) {
@@ -2639,7 +2650,8 @@ public class Home extends ActivityWithMenu implements ActivityCompat.OnRequestPe
                     dialog = builder.create();
                     dialog.show();
                 } else {
-                    if (!Experience.gotData() && !QuickSettingsDialogs.isDialogShowing() && JoH.ratelimit("start-sensor_prompt", 20)) {
+                    if (!Experience.gotData() && !QuickSettingsDialogs.isDialogShowing() && !notConnectedToG6Yet && JoH.ratelimit("start-sensor_prompt", 20)) {
+                        // Show the dialog only if there is no data, and there is no dialog, and G6 is not selected or G6 is connected, and the rate limit is satisfied.
                         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         final Context context = this;
                         builder.setTitle(getString(R.string.start_sensor) + "?");
