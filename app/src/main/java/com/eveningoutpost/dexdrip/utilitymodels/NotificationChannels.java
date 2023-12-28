@@ -7,8 +7,10 @@ import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.AudioAttributes;
+import android.os.Build;
 
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.eveningoutpost.dexdrip.R;
@@ -198,9 +200,13 @@ public class NotificationChannels {
         // get a nice string to identify the hash
         final String mhash = my_text_hash(template);
 
+        // Clear unused notification channels
+        String channelId = template.getId() + myhashcode(template);
+        clearNotificationChannels(template.getId(), channelId);
+
         // create another notification channel using the hash because id is immutable
         final NotificationChannel channel = new NotificationChannel(
-                template.getId() + mhash,
+                channelId,
                 getString(temp.getChannelId()) + mhash,
                 NotificationManager.IMPORTANCE_DEFAULT);
 
@@ -260,9 +266,13 @@ public class NotificationChannels {
         // get a nice string to identify the hash
         final String mhash = my_text_hash(template);
 
+        // Clear unused notification channels
+        String channelId = template.getId() + myhashcode(template);
+        clearNotificationChannels(template.getId(), channelId);
+
         // create another notification channel using the hash because id is immutable
         final NotificationChannel channel = new NotificationChannel(
-                template.getId() + mhash,
+                channelId,
                 getString(temp.getChannelId()) + mhash,
                 NotificationManager.IMPORTANCE_DEFAULT);
 
@@ -285,6 +295,18 @@ public class NotificationChannels {
         // create this channel if it doesn't exist or update text
         getNotifManager().createNotificationChannel(channel);
         return  channel;
+    }
+
+    @TargetApi(26)
+    static void clearNotificationChannels(String channelPrefix, String channelId) {
+        List<NotificationChannel> oldChannels = getNotifManager().getNotificationChannels();
+        for (NotificationChannel c: oldChannels) {
+            String oldId = c.getId();
+            if (oldId.startsWith(channelPrefix) && !oldId.equals(channelId)) {
+                android.util.Log.i("SC_DBG", "DELETE " + oldId + " in favor of " + channelId);
+                getNotifManager().deleteNotificationChannel(oldId);
+            }
+        }
     }
 
     static Notification getNotificationFromInsideBuilder(final NotificationCompat.Builder builder) {
