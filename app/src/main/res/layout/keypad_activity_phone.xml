@@ -211,6 +211,15 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/timetabbutton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_av_timer_white_36dp" />
+
+            <ImageButton
                 android:id="@+id/bloodtesttabbutton"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
@@ -236,15 +245,6 @@
                 android:layout_marginRight="2dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_colorize_white_48dp" />
-
-            <ImageButton
-                android:id="@+id/timetabbutton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_av_timer_white_36dp" />
         </LinearLayout>
 
         <LinearLayout
