@@ -186,6 +186,7 @@
             android:layout_gravity="top|left|center_horizontal"
             android:layout_weight="1"
             android:gravity="left"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageButton
@@ -253,6 +254,7 @@
             android:layout_gravity="right"
             android:layout_weight="1"
             android:gravity="right"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageButton
