@@ -218,8 +218,9 @@ public class xDripWidget extends AppWidgetProvider {
 
                 // render information about last value age
                 int timeAgo = (int) Math.floor((new Date().getTime() - lastBgreading.timestamp) / (1000 * 60));
-                final String fmt = context.getString(R.string.minutes_ago);
-                final String minutesAgo = MessageFormat.format(fmt, timeAgo);
+                //final String fmt = context.getString(R.string.minutes_ago);
+                //final String minutesAgo = MessageFormat.format(fmt, timeAgo);
+                final String minutesAgo = timeAgo + "m";
                 views.setTextViewText(R.id.readingAge, minutesAgo + extrastring);
                 if (timeAgo > 15) {
                     views.setTextColor(R.id.readingAge, Color.parseColor("#FFBB33"));

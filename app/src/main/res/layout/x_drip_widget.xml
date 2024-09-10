@@ -23,9 +23,13 @@
         android:paddingStart="5dp"
         android:paddingTop="2dp">
 
+<FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
             android:orientation="horizontal">
 
             <TextView
@@ -73,10 +77,12 @@
             android:id="@+id/readingAge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="--- minutes ago"
+            android:layout_gravity="bottom|start"
+            android:paddingStart="6dp"
+            android:text="--- m ago"
             android:textColor="#ffffff"
             android:textSize="10sp" />
+</FrameLayout>
 
         <TextView
             android:id="@+id/widgetStatusLine"
