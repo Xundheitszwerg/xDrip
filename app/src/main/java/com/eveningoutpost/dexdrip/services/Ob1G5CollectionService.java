@@ -1,6 +1,7 @@
 package com.eveningoutpost.dexdrip.services;
 
 import static com.eveningoutpost.dexdrip.Home.get_engineering_mode;
+import static com.eveningoutpost.dexdrip.cgm.dex.TxIdHelper.isTransmitterIdOkay;
 import static com.eveningoutpost.dexdrip.g5model.BatteryInfoRxMessage.battery0VException;
 import static com.eveningoutpost.dexdrip.g5model.BluetoothServices.Advertisement;
 import static com.eveningoutpost.dexdrip.g5model.BluetoothServices.ExtraData;
@@ -2180,6 +2181,9 @@ public class Ob1G5CollectionService extends G5BaseService {
                         return Span.colorSpan(lastSensorState.getExtendedText(), lastSensorState.transitional() ? NOTICE.color() : lastSensorState.sensorFailed() ? CRITICAL.color() : BAD.color());
                     }
                 } else {
+                    if ((transmitterMAC == null || transmitterMAC.isEmpty()) && transmitterID != null) {
+                        return Span.colorSpan("Searching for " + transmitterID, NOTICE.color()); // TODO i18n + color?
+                    }
                     return Span.colorSpan("", NORMAL.color()); // non native blank
                 }
             } else {
@@ -2260,7 +2264,8 @@ public class Ob1G5CollectionService extends G5BaseService {
         }
 
         if (transmitterID != null) {
-            l.add(new StatusItem("Transmitter ID", transmitterID + ((transmitterMAC != null && get_engineering_mode()) ? "\n" + transmitterMAC : "")));
+            val txIdOk = isTransmitterIdOkay(transmitterID);
+            l.add(new StatusItem("Transmitter ID", transmitterID + ((transmitterMAC != null && get_engineering_mode()) ? "\n" + transmitterMAC : "") + (!txIdOk ? "\n" + gs(R.string.invalid_transmitter_id) : ""), txIdOk ? NORMAL : CRITICAL));
         }
 
         if (static_connection_state != null) {
@@ -2336,7 +2341,7 @@ public class Ob1G5CollectionService extends G5BaseService {
                 if (vr1.version_code != 3 && get_engineering_mode()) {
                     l.add(new StatusItem("Compat Version", "" + vr1.version_code, NORMAL));
                 }
-                if (vr1.max_runtime_days != 110 && vr1.max_runtime_days != 112 && vr1.max_runtime_days != 0) {
+                if (vr1.max_runtime_days != 110 && vr1.max_runtime_days != 112 && vr1.max_runtime_days != 180 && vr1.max_runtime_days != 0) {
                     l.add(new StatusItem("Transmitter Life", "" + vr1.max_runtime_days + " " + gs(R.string.days)));
                 }
 
@@ -2351,7 +2356,7 @@ public class Ob1G5CollectionService extends G5BaseService {
 
         try {
             if (vr2 != null) {
-                if (vr2.typicalSensorDays != 10 && vr2.typicalSensorDays != 7 && vr2.typicalSensorDays != 15) {
+                if (vr2.typicalSensorDays != 10 && vr2.typicalSensorDays != 15 && vr2.typicalSensorDays != 60) {
                     l.add(new StatusItem("Sensor Period", niceTimeScalar(vr2.typicalSensorDays * DAY_IN_MS), Highlight.NOTICE));
                 }
 
@@ -2367,7 +2372,7 @@ public class Ob1G5CollectionService extends G5BaseService {
                     }
                 }
 
-                if (vr3 == null && vr2.version1 != 0 && vr2.warmupSeconds != 0 && vr2.warmupSeconds != 7200 && vr2.warmupSeconds != 1620 && vr2.warmupSeconds != 3600) {
+                if (vr3 == null && vr2.version1 != 0 && vr2.warmupSeconds != 0 && vr2.warmupSeconds != 7200 && vr2.warmupSeconds != 1620 && vr2.warmupSeconds != 3600 && vr2.warmupSeconds != 3720) {
                     l.add(new StatusItem("Warm Up Time", niceTimeScalar(vr2.warmupSeconds * SECOND_IN_MS), Highlight.NOTICE));
                 }
 
@@ -2379,7 +2384,7 @@ public class Ob1G5CollectionService extends G5BaseService {
 
         try {
             if (vr3 != null) {
-                if (vr3.warmupSeconds != 7200 && vr3.warmupSeconds != 3600) {
+                if (vr3.warmupSeconds != 7200 && vr3.warmupSeconds != 3600 && !isTransmitterModified(getTransmitterID())) {
                     l.add(new StatusItem("Warm Up Time", niceTimeScalar(vr3.warmupSeconds * SECOND_IN_MS), Highlight.NOTICE));
                 }
             }
