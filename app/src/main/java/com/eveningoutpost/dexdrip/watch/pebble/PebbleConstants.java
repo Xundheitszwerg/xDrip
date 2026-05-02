@@ -18,11 +18,13 @@ public class PebbleConstants {
     public static final int KEY_BG_STRING = 11;    // Formatted BG value, e.g. "7.5" or "135"
     public static final int KEY_DELTA_STRING = 12; // Formatted delta, e.g. "+0.3" or "-5"
     public static final int KEY_ARROW_INDEX = 13;
+    public static final int KEY_PHONE_BATTERY = 14; // Phone battery level [0-100]
 
     // Capability bits (what data the watchface wants to receive)
     public static final int CAP_BG = 1 << 0;
     public static final int CAP_TREND_ARROW = 1 << 1;
     public static final int CAP_DELTA = 1 << 2;
+    public static final int CAP_PHONE_BATTERY = 1 << 3;
 
     // Default capabilities if watchface doesn't announce
     public static final int FALLBACK_CAPABILITIES = CAP_BG | CAP_TREND_ARROW | CAP_DELTA;

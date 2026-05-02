@@ -101,10 +101,10 @@ public class PebbleService {
             dict.addString(PebbleConstants.KEY_DELTA_STRING, dg.unitized_delta_no_units);
         }
 
-        // if (PebbleWatchState.hasCapability(PebbleConstants.CAP_PHONE_BATTERY)) {
-        //     int battery = getPhoneBatteryLevel(context);
-        //     dict.addUint8(PebbleConstants.KEY_PHONE_BATTERY, (byte) battery);
-        // }
+        if (PebbleWatchState.hasCapability(PebbleConstants.CAP_PHONE_BATTERY)) {
+            int battery = getPhoneBatteryLevel(context);
+            dict.addUint8(PebbleConstants.KEY_PHONE_BATTERY, (byte) battery);
+        }
 
         return dict;
     }
